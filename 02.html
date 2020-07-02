@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+<div id="app">
+<table id="table">
+	<thead>
+	<tr>
+		<td> </td>
+		<td>ID</td>
+		<td>书名</td>
+		<td>出版日期</td>
+		<td>价格</td>
+		<td>数量</td>
+		<td>操作</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr v-for="(item,index,key) in books" :key="item.id">
+		<td><input type="checkbox" :checked="item.isChecked"></td>
+		<td>{{item.id}}</td>
+		<td>{{item.name}}</td>
+		<td>{{item.tdate}}</td>
+		<td>{{item.price}}</td>
+		<td>
+			<button v-on:click="add('item')">+</button>
+			{{item.count}}
+			<button>-</button>
+		</td>
+		<td><button>删除</button></td>
+	</tr>
+	</tbody>
+</table>
+	<h2>总价格{{total}}</h2>
+</div>
+<!--<script src="02.js"></script>-->
+</body>
+<script type="text/javascript">
+	var app = new Vue({
+		el: '#table',
+		data: {
+			books:[
+				{isChecked:true,id:1,price:80,tdate:'2020-07-01',count:1,name:'java从入门到放弃'},
+				{isChecked:false,id:2,price:90,tdate:'2020-07-02',count:1,name:'Vue从入门到放弃'},
+				{isChecked:false,id:3,price:100.01,tdate:'2020-07-03',count:1,name:'mysql从入门到放弃'},
+				{isChecked:false,id:4,price:70.00,tdate:'2020-07-04',count:1,name:'什么从入门到放弃'},
+			]
+		},
+		method:{
+			add:function (item) {
+				console.log(item);
+			}
+		},
+		compute:{
+			total:function () {
+				return this.books.reduce((returnVal,nextItem)=>returnVal+nextItem.count*nextItem.price);
+			}
+		}
+
+	})
+</script>
+</html>
