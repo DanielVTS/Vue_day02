@@ -12,7 +12,7 @@
 </head>
 <body>
 <div id="app">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover"  v-show="!booksIsEmpty">
         <thead>
         <tr class="table-dark">
             <td></td>
@@ -44,7 +44,8 @@
         </tr>
         </tbody>
     </table>
-    <h2>总价格{{total | formatPrice}}</h2>
+    <h2 v-show="!booksIsEmpty">总价格{{total | formatPrice}}</h2>
+    <h2 v-show="booksIsEmpty">购物车为空</h2>
 </div>
 <!--<script src="02.js"></script>-->
 </body>
@@ -64,6 +65,7 @@
                 {isChecked: false, id: 3, price: 100.01, tdate: '2020-07-03', count: 1, name: 'mysql从入门到放弃'},
                 {isChecked: false, id: 4, price: 70.00, tdate: '2020-07-04', count: 1, name: '什么从入门到放弃'},
             ],
+            booksIsEmpty:false,
         },
         methods: {
             reverseChecked:function(item){
@@ -79,6 +81,7 @@
             remove:function (index) {
                 console.log(index);
                 this.books.splice(index,1);
+                if(this.books.length<1) this.booksIsEmpty=true;
             }
         },
         computed: {
