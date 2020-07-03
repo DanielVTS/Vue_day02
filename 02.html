@@ -25,16 +25,20 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(item,index) in books" :key="item.id" :class="{'table-active': item.isChecked}">
-            <td @click="reverseChecked(item)"><label>
-                <input type="checkbox" :checked="item.isChecked">
-            </label></td>
+        <tr v-for="(item,index) in books" :key="item.id" :class="{'table-active': item.isChecked}"
+            v-bind="item" v-on:item-add="add">
+            <td @click="reverseChecked(item)">
+                <label>
+                    <input type="checkbox" v-model="item.isChecked">
+                </label>
+            </td>
             <td  @click="reverseChecked(item)">{{item.id}}</td>
             <td  @click="reverseChecked(item)">{{item.name}}</td>
             <td  @click="reverseChecked(item)">{{item.tdate}}</td>
             <td  @click="reverseChecked(item)">{{item.price | formatPrice}}</td>
             <td>
-                <button v-on:click="add(item)">+</button>
+<!--                <button v-on:click="add(item)">+</button>-->
+                <component-add :item="item" v-on:click="$emit('item-add',item)"></component-add>
                 {{item.count}}
                 <button @click="minus(item)">-</button>
             </td>
@@ -56,43 +60,63 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script type="text/javascript">
+    // Vue.component('button-add',{
+    //     data:function(){
+    //
+    //     },
+    //     template:'<button v-on:click="add(item)">+</button>'
+    // })
+
+    var ComponentAdd={
+
+    }
+
     let app = new Vue({
         el: '#app',
         data: {
             books: [
-                {isChecked: false, id: 1, price: 80, tdate: '2020-07-01', count: 1, name: 'java从入门到放弃'},
+                {isChecked: true, id: 1, price: 80, tdate: '2020-07-01', count: 1, name: 'java从入门到放弃'},
                 {isChecked: false, id: 2, price: 90, tdate: '2020-07-02', count: 1, name: 'Vue从入门到放弃'},
                 {isChecked: false, id: 3, price: 100.01, tdate: '2020-07-03', count: 1, name: 'mysql从入门到放弃'},
                 {isChecked: false, id: 4, price: 70.00, tdate: '2020-07-04', count: 1, name: '什么从入门到放弃'},
             ],
-            booksIsEmpty:false,
+            booksIsEmpty: false,
         },
         methods: {
-            reverseChecked:function(item){
-              item.isChecked=!item.isChecked;
+            reverseChecked: function (item) {
+                item.isChecked = !item.isChecked;
             },
-            add:function (item) {
+            add: function (item) {
                 item.count++;
                 // console.log(item.count);
             },
-            minus:function (item) {
-            	if(item.count>0) item.count--;
-			},
-            remove:function (index) {
+            minus: function (item) {
+                if (item.count > 0) item.count--;
+            },
+            remove: function (index) {
                 console.log(index);
-                this.books.splice(index,1);
-                if(this.books.length<1) this.booksIsEmpty=true;
+                this.books.splice(index, 1);
+                if (this.books.length < 1) this.booksIsEmpty = true;
             }
         },
         computed: {
             total: function () {
-                return this.books.reduce((returnVal, nextItem) => returnVal + nextItem.count * nextItem.price,0);
+                return this.books.reduce((returnVal, nextItem) => returnVal + nextItem.count * nextItem.price, 0);
             }
         },
-		filters:{
-        	formatPrice:price=> '¥'+price.toFixed(2)
-		}
+        filters: {
+            formatPrice: price => '¥' + price.toFixed(2)
+        },
+        components:{
+            'component-add': {
+                data:function(){
+                    return {}
+                },
+                props: ['item'],
+                template: '<button>+</button>'
+            }
 
+        }
     })
 </script>
 </html>
